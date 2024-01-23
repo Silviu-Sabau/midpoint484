@@ -1762,6 +1762,43 @@ public class SearchTest extends BaseSQLRepoTest {
         assertEquals("Wrong user name", "atestuserX00002", users.get(0).getName().getOrig());
     }
 
+    /** MID-9427 */
+    @Test
+    public void test981SearchByArchetypeName() throws Exception {
+        ObjectQuery query = prismContext.queryFor(UserType.class)
+                .item(UserType.F_ARCHETYPE_REF, T_OBJECT_REFERENCE, F_NAME)
+                .eqPoly("archetype1")
+                .build();
+        OperationResult result = new OperationResult("search");
+        List<PrismObject<UserType>> users = repositoryService.searchObjects(UserType.class, query, null, result);
+        assertThatOperationResult(result).isSuccess();
+        assertThat(users)
+                .as("users found")
+                .hasSize(2)
+                .map(u -> u.getName().getOrig())
+                .as("user names")
+                .containsExactlyInAnyOrder("atestuserX00002", "atestuserX00003");
+
+        // Note that the SQL is not efficient (useless join on m_object):
+        //
+        // SELECT _u.oid, _o.fullObject
+        //     FROM m_user _u
+        //         JOIN m_object _o ON _u.oid = _o.oid
+        //         LEFT JOIN m_reference _ref ON _o.oid = _ref.owner_oid AND (_ref.reference_type = 11)
+        //         LEFT JOIN m_archetype _a ON (_ref.targetOid = _a.oid)
+        //     WHERE (_a.name_orig = ? AND _a.name_norm = ?)
+
+        // The same but arbitrary assignment holders now
+        var objects = repositoryService.searchObjects(AssignmentHolderType.class, query, null, result);
+        assertThatOperationResult(result).isSuccess();
+        assertThat(objects)
+                .as("objects found")
+                .hasSize(3)
+                .map(u -> u.getName().getOrig())
+                .as("object names")
+                .containsExactlyInAnyOrder("atestuserX00002", "atestuserX00003", "Synchronization: Embedded Test OpenDJ");
+    }
+
     @Test
     public void test999MultipleOrdersAreSupportedByFluentApiAndRepository() throws SchemaException {
         given("search users query ordered by family and given name");
