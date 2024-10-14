@@ -33,6 +33,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.identityconnectors.common.StringUtil;
 import org.identityconnectors.common.logging.Log;
 import org.identityconnectors.common.security.SecurityUtil;
+import org.identityconnectors.framework.common.objects.ObjectClass;
 
 public class SNService {
 
@@ -47,7 +48,8 @@ public class SNService {
     public enum ResourceTable {
         sys_user,
         sys_user_group,
-        sys_user_grmember
+        sys_user_grmember,
+        sys_user_role
 
     }
 

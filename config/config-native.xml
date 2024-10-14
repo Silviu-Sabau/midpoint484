@@ -33,6 +33,20 @@ https://github.com/Evolveum/midpoint/blob/master/repo/system-init/src/main/resou
         <webApplication>
             <importFolder>${midpoint.home}/import</importFolder>
         </webApplication>
+        <!--<repository>-->
+        <!--    <type>native</type>-->
+        <!--    <jdbcUrl>jdbc:postgresql://localhost:5432/midpoint</jdbcUrl>-->
+        <!--    <jdbcUsername>midpoint</jdbcUsername>-->
+        <!--    <jdbcPassword>password</jdbcPassword>-->
+        <!--</repository>-->
+        <!--<audit>-->
+        <!--    <auditService>-->
+        <!--        <auditServiceFactoryClass>com.evolveum.midpoint.audit.impl.LoggerAuditServiceFactory</auditServiceFactoryClass>-->
+        <!--    </auditService>-->
+        <!--    <auditService>-->
+        <!--        <auditServiceFactoryClass>com.evolveum.midpoint.repo.sqale.audit.SqaleAuditServiceFactory</auditServiceFactoryClass>-->
+        <!--    </auditService>-->
+        <!--</audit>-->
         <repository>
             <type>native</type>
             <jdbcUrl>jdbc:postgresql://localhost:5432/midpoint</jdbcUrl>

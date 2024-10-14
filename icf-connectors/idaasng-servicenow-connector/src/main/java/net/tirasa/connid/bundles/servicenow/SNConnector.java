@@ -63,6 +63,7 @@ import org.identityconnectors.framework.spi.operations.UpdateOp;
 public class SNConnector implements
         Connector, CreateOp, DeleteOp, SchemaOp, SearchOp<Filter>, TestOp, UpdateOp {
 
+
     private SNConnectorConfiguration configuration;
 
     private Schema schema;
@@ -70,6 +71,7 @@ public class SNConnector implements
     private SNClient client;
 
     private static final Log LOG = Log.getLog(SNConnector.class);
+
 
     @Override
     public Configuration getConfiguration() {
@@ -143,7 +145,7 @@ public class SNConnector implements
             Attribute filterAttr = ((EqualsFilter) query).getAttribute();
             if (filterAttr instanceof Uid) {
                 key = filterAttr;
-            } else if (ObjectClass.ACCOUNT.equals(objectClass) || ObjectClass.GROUP.equals(objectClass)) {
+            } else if (ObjectClass.ACCOUNT.equals(objectClass) || ObjectClass.GROUP.equals(objectClass) || SNAttributes.ROLE.equals(objectClass)) {
                 key = filterAttr;
             }
         }
@@ -154,8 +156,9 @@ public class SNConnector implements
         }
 
         SNService.ResourceTable type = setResourceType(objectClass);
+        System.out.println(type);
 
-        if (ObjectClass.ACCOUNT.equals(objectClass) || ObjectClass.GROUP.equals(objectClass)) {
+        if (ObjectClass.ACCOUNT.equals(objectClass) || ObjectClass.GROUP.equals(objectClass) || SNAttributes.ROLE.equals(objectClass)) {
             if (key == null) {
                 List<Resource> resources = null;
                 int remainingResults = -1;
@@ -230,6 +233,7 @@ public class SNConnector implements
                     + objectClass.getObjectClassValue() + " is not supported");
         }
     }
+
 
     @Override
     public Uid create(ObjectClass objectClass, Set<Attribute> createAttributes, OperationOptions options) {
@@ -417,10 +421,15 @@ public class SNConnector implements
 
     private SNService.ResourceTable setResourceType(final ObjectClass objectClass) {
         SNService.ResourceTable type = null;
+        System.out.println(objectClass);
         if (ObjectClass.ACCOUNT.equals(objectClass)) {
             type = SNService.ResourceTable.sys_user;
         } else if (ObjectClass.GROUP.equals(objectClass)) {
             type = SNService.ResourceTable.sys_user_group;
+        } else if (SNAttributes.ROLE.equals(objectClass)){
+            type = SNService.ResourceTable.sys_user_role;
+
+                    //(ObjectClass.ROLE.equals(objectClass))
         }
 
         return type;

@@ -31,5 +31,6 @@
         <module>dummy-connector</module>
         <module>dummy-connector-fake</module>
         <module>dummy-resource</module>
+        <module>idaasng-servicenow-connector</module>
     </modules>
 </project>

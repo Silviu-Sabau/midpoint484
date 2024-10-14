@@ -31,11 +31,19 @@ import org.identityconnectors.framework.common.objects.SchemaBuilder;
 
 public final class SNAttributes {
 
+    public static final String ROLE_NAME = "Role";
+    public static final ObjectClass ROLE = new ObjectClass(ROLE_NAME);
+
     public static final String RESOURCE_ATTRIBUTE_ID = "sys_id";
 
     public static final String USER_ATTRIBUTE_USERNAME = "user_name";
 
     public static final String RESOURCE_ATTRIBUTE_NAME = "name";
+
+    public static String type() {
+        return ROLE_NAME;
+    }
+
 
     public static Schema buildSchema() {
 
@@ -58,6 +66,13 @@ public final class SNAttributes {
 
         group = groupBuilder.build();
         builder.defineObjectClass(group);
+
+        ObjectClassInfoBuilder rolesBuilder = new ObjectClassInfoBuilder().setType(type());
+        ObjectClassInfo roles;
+        rolesBuilder.addAttributeInfo(Name.INFO);
+        roles = rolesBuilder.build();
+        builder.defineObjectClass(roles);
+        System.out.println(ROLE);
 
         return builder.build();
     }
